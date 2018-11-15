@@ -1,8 +1,2 @@
 order-aggregator.iml
-.idea/vcs.xml
-.idea/misc.xml
-.idea/artifacts/order_aggregator_war.xml
-.idea/modules.xml
-.idea/artifacts/order_aggregator_war_exploded.xml
-.idea/compiler.xml
-.idea/workspace.xml
+.idea/*
