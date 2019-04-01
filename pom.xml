@@ -1,14 +1,27 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <groupId>com.jiangnan</groupId>
     <artifactId>order-aggregator</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
+    <name>order-aggregator</name>
+    <url>http://maven.apache.org</url>
+
     <modules>
         <module>order-platform</module>
         <module>order-common</module>
+        <module>order-schedule</module>
     </modules>
-    <name>order-aggregator</name>
-    <url>http://maven.apache.org</url>
+
+    <properties>
+        <spring.version>5.1.2.RELEASE</spring.version>
+        <mybatis.version>3.4.6</mybatis.version>
+        <slf4j.version>1.6.6</slf4j.version>
+        <log4j.version>1.2.12</log4j.version>
+        <shiro.version>1.2.3</shiro.version>
+        <mysql.version>5.1.6</mysql.version>
+    </properties>
+
 </project>

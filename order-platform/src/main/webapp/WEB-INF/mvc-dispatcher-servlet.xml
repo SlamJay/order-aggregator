@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:websocket="http://www.springframework.org/schema/websocket"
+	xsi:schemaLocation=" 
+           http://www.springframework.org/schema/beans 
+           http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+           http://www.springframework.org/schema/context 
+           http://www.springframework.org/schema/context/spring-context-4.2.xsd
+           http://www.springframework.org/schema/mvc 
+           http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd
+           http://www.springframework.org/schema/aop 
+           http://www.springframework.org/schema/aop/spring-aop-4.2.xsd 
+           http://www.springframework.org/schema/websocket http://www.springframework.org/schema/websocket/spring-websocket-4.2.xsd"
+	default-autowire="byName">
+
+	<mvc:annotation-driven />
+	<bean id="configProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="locations">
+            <list>
+                <value>classpath*:application.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer">
+        <property name="properties" ref="configProperties"/>
+    </bean>
+    
+    <!-- shiro 权限配置 -->
+    <!--<import resource="classpath:applicationContext-shiro.xml"/>-->
+     <!--<import resource="classpath*:applicationContext-redis.xml"/>-->
+    
+	<!-- 配置静态资源，直接映射到对应的文件夹，不被DispatcherServlet处理，3.04新增功能，需要重新设置spring-mvc-3.0.xsd -->
+	<mvc:resources mapping="/static/**" location="/static/" />
+	<!--<mvc:resources mapping="/html/**" location="/html/" />-->
+	
+	<context:component-scan base-package="com.jiangnan.platform.controller">
+		<context:include-filter type="annotation"
+			expression="org.springframework.stereotype.Controller" />
+		<context:exclude-filter type="annotation"
+			expression="org.springframework.stereotype.Service" />
+	</context:component-scan>
+
+	<aop:aspectj-autoproxy proxy-target-class="true"/>
+	<!-- 自定义objectmapper 转义hmtl标签 -->
+	<bean class="org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver"/>
+	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"/>
+	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+       <property name="messageConverters">    
+           <list>    
+               <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+                   <property name="supportedMediaTypes"> 
+                       <list> 
+                           <value>text/plain;charset=UTF-8</value> 
+                           <value>application/json;charset=UTF-8</value> 
+                       </list> 
+                   </property>
+                   <!--<property name="objectMapper">-->
+                       <!--<bean class="com.toporperty.platform.utils.MyObjectMapper"></bean>-->
+                   <!--</property>-->
+               </bean>    
+           </list>    
+       </property>    
+   </bean>
+	<bean class="org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver"/>
+	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"/>
+	<bean class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter"/>
+	<bean id="stringConverter"
+		  class="org.springframework.http.converter.StringHttpMessageConverter">
+		<property name="supportedMediaTypes">
+			<list>
+				<value>text/plain;charset=UTF-8</value>
+				<value>application/json;charset=UTF-8</value>
+				<value>text/html;charset=UTF-8</value>
+			</list>
+		</property>
+	</bean>
+	<bean id="jsonConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"></bean>
+
+	<!--<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">-->
+		<!--<property name="messageConverters">-->
+			<!--<list>-->
+				<!--<ref bean="stringConverter" />-->
+				<!--<ref bean="jsonConverter" />-->
+			<!--</list>-->
+		<!--</property>-->
+	<!--</bean>-->
+
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="order" value="2" />
+		<property name="prefix">
+			<value>/WEB-INF/pages/</value>
+		</property>
+		<property name="suffix">
+			<value>.jsp</value>
+		</property>
+	</bean>
+	
+	 <bean id="exceptionResolver" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">  
+        <property name="exceptionMappings">  
+            <props>  
+                <prop key="java.lang.Throwable">error/404</prop>
+            </props>  
+        </property>  
+    </bean>
+    
+    	<!-- SpringMVC上传文件时，需要配置MultipartResolver处理器 -->  
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">  
+        <!-- 指定所上传文件的总大小不能超过50MB。注意maxUploadSize属性的限制不是针对单个文件，而是所有文件的容量之和 -->  
+        <property name="maxUploadSize" value="50000000"/>  
+        <property name="maxInMemorySize" value="4096"/>
+    </bean>
+    
+	<!-- 在实际开发中通常都需配置 mvc:annotation-driven标签,这个标签是开启注解 -->  
+    <mvc:annotation-driven></mvc:annotation-driven>  
+    <!-- 拦截器 -->  
+    <!--<mvc:interceptors>  -->
+        <!-- 多个拦截器，顺序执行 -->
+		<!--<mvc:interceptor>-->
+			<!--<mvc:mapping path="/**"/>-->
+			<!--<bean class="com.toporperty.platform.interceptor.LoingTimeoutInterceptor"></bean>-->
+		<!--</mvc:interceptor>-->
+    <!--</mvc:interceptors>-->
+
+	<bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
+	        depends-on="lifecycleBeanPostProcessor" >
+	        <property name="proxyTargetClass" value="true" />
+     </bean>
+	<!--<bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">-->
+	        <!--<property name="securityManager" ref="securityManager" />-->
+	<!--</bean>-->
+
+	<!-- 开启aop注解方式,默认为false -->
+	<aop:aspectj-autoproxy expose-proxy="true" proxy-target-class="true" />
+</beans> 

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans        http://www.springframework.org/schema/beans/spring-beans.xsd        http://code.alibabatech.com/schema/dubbo        http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+ 
+    <!-- 消费方应用名，用于计算依赖关系，不是匹配条件，不要与提供方一样 -->
+    <dubbo:application name="puhui-toporperty"  />
+ 	
+    <dubbo:registry protocol="zookeeper" address="${zookeeper.address}"  client="zkclient" timeout="5000"/>
+	<!-- uc dubbo服务接口 -->
+	<!--<dubbo:reference id="remoteUserCenteCentreService" interface="com.puhui.uc.api.service.RemoteUserCentreService" loadbalance="random" timeout="100000" check="false"/>-->
+	<!--&lt;!&ndash; UC修改密码服务接口 &ndash;&gt;-->
+    <!--<dubbo:reference id="remoteLoginService" interface="com.puhui.uc.api.service.RemoteLoginService" check="false"/>-->
+	<!--<dubbo:reference id="riskAuditService" interface="com.puhui.risk.api.RiskAuditService" loadbalance="random" timeout="100000" check="false"/>-->
+	<!--<dubbo:reference id="antiFruadAuditService" interface="com.puhui.antifraud.api.service.AntiFruadAuditService" loadbalance="random" timeout="100000" check="false"/>-->
+</beans>
